@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <!-- 基础颜色 (可根据需求修改) -->
+    <color name="purple_500">#6750A4</color>
+    <color name="purple_700">#4D44A3</color>
+    <color name="teal_200">#81C784</color>
+    <color name="teal_700">#388E3C</color>
+    <color name="reading_warm_yellow">#FFFDF6E3</color> <!-- 柔和暖黄色（类似纸张色） -->
+</resources>

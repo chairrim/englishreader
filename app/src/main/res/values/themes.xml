@@ -1,0 +1,36 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+<!--    <style name="Base.Theme.Englishreader" parent="Theme.Material3.DayNight.NoActionBar">-->
+<!--        &lt;!&ndash; Customize your light theme here. &ndash;&gt;-->
+<!--        &lt;!&ndash; <item name="colorPrimary">@color/my_light_primary</item> &ndash;&gt;-->
+<!--    </style>-->
+
+<!--    <style name="Theme.Englishreader" parent="Base.Theme.Englishreader" />-->
+
+        <!-- 基础应用主题 (Material3) -->
+        <style name="Theme.EnglishReader" parent="Theme.Material3.DayNight.NoActionBar">
+            <!-- 主色调 -->
+            <item name="colorPrimary">@color/purple_500</item>
+            <item name="colorPrimaryVariant">@color/purple_700</item>
+            <item name="colorOnPrimary">@color/white</item>
+
+            <!-- 次级色调 -->
+            <item name="colorSecondary">@color/teal_200</item>
+            <item name="colorSecondaryVariant">@color/teal_700</item>
+            <item name="colorOnSecondary">@color/black</item>
+
+            <!-- 背景色 -->
+            <item name="colorSurface">@color/white</item>
+            <item name="colorOnSurface">@color/black</item>
+
+            <!-- 文本样式 -->
+            <item name="textAppearanceBodyLarge">@style/TextAppearance.Material3.BodyLarge</item>
+            <item name="textAppearanceHeadlineSmall">@style/TextAppearance.Material3.HeadlineSmall</item>
+
+            <!-- 状态栏 -->
+            <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+
+            <item name="android:textColor">?attr/colorOnSurface</item> <!-- 使用主题的“表面文本色” -->
+
+        </style>
+</resources>
