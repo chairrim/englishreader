@@ -6,6 +6,8 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
+import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -13,38 +15,34 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.google.android.material.button.MaterialButton;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ArticleDetailActivity extends AppCompatActivity {
-    // 新增：中文内容传递键
     public static final String EXTRA_CHINESE_CONTENT = "chinese_content";
     public static final String EXTRA_TITLE = "title";
     public static final String EXTRA_CATEGORY = "category";
     public static final String EXTRA_CONTENT = "content";
 
     private TextView contentView;
-    private MaterialButton translateButton;
-    private String englishContent; // 英文正文
-    private String chineseContent; // 中文翻译
-    private boolean isShowingEnglish = true; // 标记当前显示的语言
+    private String englishContent;
+    private String chineseContent;
+    private boolean isShowingEnglish = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_detail);
 
-        // 初始化工具栏
+        // 初始化工具栏并设置为ActionBar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setTitle("Article");
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true); // 显示返回按钮
+            getSupportActionBar().setTitle("文章详情"); // 设置标题
         }
 
-        // 获取传递的所有数据
+        // 获取传递的数据
         String title = getIntent().getStringExtra(EXTRA_TITLE);
         String category = getIntent().getStringExtra(EXTRA_CATEGORY);
         englishContent = getIntent().getStringExtra(EXTRA_CONTENT);
@@ -54,33 +52,63 @@ public class ArticleDetailActivity extends AppCompatActivity {
         TextView titleView = findViewById(R.id.detailTitle);
         TextView categoryView = findViewById(R.id.detailCategory);
         contentView = findViewById(R.id.detailContent);
-        translateButton = findViewById(R.id.translateButton);
 
         // 设置初始数据
         titleView.setText(title);
         categoryView.setText(category);
         showEnglishContent(); // 初始显示英文
-
-        // 翻译按钮点击事件
-        translateButton.setOnClickListener(v -> switchLanguage());
     }
 
-    // 切换中英文显示
+    // 加载Toolbar菜单
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.article_detail_menu, menu);
+
+        // 获取菜单按钮并设置为国旗文本
+        MenuItem translateItem = menu.findItem(R.id.menu_translate);
+        TextView textView = (TextView) translateItem.getActionView();
+        if (textView != null) {
+            textView.setText("🇨🇳 / 🇺🇸");  // 直接显示国旗文本
+            textView.setTextSize(18);
+            textView.setPadding(16, 0, 16, 0);
+            textView.setGravity(Gravity.CENTER);
+            // 设置点击事件
+            textView.setOnClickListener(v -> switchLanguage());
+        }
+        return true;
+    }
+
+    // 菜单点击事件（处理翻译按钮）
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_translate) {
+            // 点击翻译按钮切换语言
+            switchLanguage();
+            return true;
+        } else if (id == android.R.id.home) {
+            // 点击返回按钮关闭页面
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    // 切换语言逻辑
     private void switchLanguage() {
         if (isShowingEnglish) {
             // 切换到中文
             contentView.setText(chineseContent);
-            contentView.setTextIsSelectable(true); // 中文也支持复制
-            translateButton.setText("Switch to English");
+            contentView.setTextIsSelectable(true);
+            //contentView.setTextHighlightColor(getResources().getColor(android.R.color.holo_blue_light));
         } else {
-            // 切换回英文（重新设置点击查词功能）
+            // 切换到英文
             showEnglishContent();
-            translateButton.setText("Switch to Chinese");
         }
         isShowingEnglish = !isShowingEnglish;
     }
 
-    // 显示英文内容并设置单词点击查词
+    // 显示英文内容（带单词点击查词）
     private void showEnglishContent() {
         SpannableString spannable = new SpannableString(englishContent);
         Pattern pattern = Pattern.compile("[a-zA-Z]+(?:['-][a-zA-Z]+)*");
@@ -88,7 +116,7 @@ public class ArticleDetailActivity extends AppCompatActivity {
 
         while (matcher.find()) {
             final String word = matcher.group();
-//            if (word.length() < 2) continue;
+            if (word.length() < 2) continue;
 
             ClickableSpan clickableSpan = new ClickableSpan() {
                 @Override
@@ -102,7 +130,8 @@ public class ArticleDetailActivity extends AppCompatActivity {
                 public void updateDrawState(TextPaint ds) {
                     super.updateDrawState(ds);
                     ds.setUnderlineText(false);
-                    ds.setColor(contentView.getCurrentTextColor()); // 使用TextView的当前文本色
+                    ds.bgColor = getResources().getColor(android.R.color.transparent);
+                    ds.setColor(contentView.getCurrentTextColor());
                 }
             };
 
@@ -113,15 +142,6 @@ public class ArticleDetailActivity extends AppCompatActivity {
         contentView.setText(spannable);
         contentView.setTextIsSelectable(true);
         contentView.setMovementMethod(android.text.method.LinkMovementMethod.getInstance());
-        contentView.setHighlightColor(getResources().getColor(android.R.color.holo_blue_light));
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        //contentView.setTextHighlightColor(getResources().getColor(android.R.color.holo_blue_light));
     }
 }

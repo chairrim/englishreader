@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <!-- 新增：用actionViewClass直接显示文本 -->
+    <item
+        android:id="@+id/menu_translate"
+        android:title="切换语言"
+        app:showAsAction="always"
+        app:actionViewClass="android.widget.TextView"
+    android:contentDescription="切换中英文" />
+</menu>
